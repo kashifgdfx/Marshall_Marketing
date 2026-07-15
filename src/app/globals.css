@@ -1,0 +1,202 @@
+@import "tailwindcss";
+
+:root {
+  /* Backgrounds */
+  --background: #F8FAFC;
+  --foreground: #1A202C;
+
+  /* Primary Brand Colors */
+  --color-primary: #2F6FE4;
+  --color-primary-dark: #1F4FAF;
+  --color-primary-light: #DCE8FF;
+
+  /* Secondary */
+  --color-secondary: #0F172A;
+  --color-secondary-light: #1E293B;
+
+  /* Accent */
+  --color-accent: #4D8BFF;
+  --color-accent-light: #EEF4FF;
+
+  /* Neutral */
+  --color-white: #FFFFFF;
+  --color-black: #000000;
+
+  --color-border: #D7E3F4;
+  --color-muted: #64748B;
+  --color-card: #FFFFFF;
+
+  /* Status */
+  --color-success: #22C55E;
+  --color-warning: #F59E0B;
+  --color-danger: #EF4444;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-primary: var(--color-primary);
+  --color-primary-dark: var(--color-primary-dark);
+  --color-primary-light: var(--color-primary-light);
+
+  --color-secondary: var(--color-secondary);
+  --color-secondary-light: var(--color-secondary-light);
+
+  --color-accent: var(--color-accent);
+  --color-accent-light: var(--color-accent-light);
+
+  --color-border: var(--color-border);
+  --color-muted: var(--color-muted);
+  --color-card: var(--color-card);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #071221;
+    --foreground: #F8FAFC;
+
+    --color-primary: #4B86FF;
+    --color-primary-dark: #2F6FE4;
+    --color-primary-light: #183A75;
+
+    --color-secondary: #0B1220;
+    --color-secondary-light: #162032;
+
+    --color-accent: #7AA7FF;
+    --color-accent-light: #102A55;
+
+    --color-border: #23344D;
+    --color-muted: #94A3B8;
+    --color-card: #101C2E;
+
+    --color-success: #22C55E;
+    --color-warning: #FBBF24;
+    --color-danger: #F87171;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+button {
+  cursor: pointer;
+}
+@layer utilities {
+  .custom-container {
+    @apply mx-auto max-w-[1450px] px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12;
+  }
+
+  .custom-padding {
+    @apply px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12;
+  }
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+
+  
+}
+
+/* Article content rich text styles */
+.article-content ul {
+  list-style-type: disc !important;
+  padding-left: 1.75rem;
+}
+
+.article-content ol {
+  list-style-type: decimal;
+  padding-left: 1.75rem;
+}
+
+.article-content li {
+  line-height: 1.75;
+  color: #444;
+}
+
+.article-content ul ul {
+  list-style-type: circle;
+}
+
+.article-content ul ul ul {
+  list-style-type: square;
+}
+
+.article-content p {
+  font-size: 16px;
+}
+
+.article-content h2 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 0.75rem;
+}
+
+.article-content h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.article-content a {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+.article-content img {
+  width: 100%  !important;
+  height: 100% !important;
+}
+
+.article-content blockquote {
+  border-left: 4px solid var(--color-primary);
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  color: #666;
+  font-style: italic;
+}
+
+/* Table Styling */
+.article-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 15px;
+}
+
+.article-content th,
+.article-content td {
+  border: 1px solid #ddd;
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.article-content th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+}
+
+.article-content tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.article-content tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Responsive Table */
+.article-content .table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 1.5rem 0;
+}
+
+.article-content .table-wrapper table {
+  margin: 0;
+  min-width: 500px;
+}
