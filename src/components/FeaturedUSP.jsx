@@ -64,7 +64,7 @@ const FeaturedUSP = () => {
   };
 
   return (
-    <section className="py-16 md:py-20 bg-background text-foreground border-b border-border/50 overflow-hidden">
+    <section className="py-16 md:py-20 bg-white text-foreground border-b border-border/50 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4">
         {/* 4. ग्रिड डिव को 'motion.div' में बदलें और वेरिएंट्स अप्लाई करें */}
         <motion.div
