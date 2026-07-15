@@ -70,34 +70,114 @@ const Navbar = () => {
               </Link>
             </li>
 
-            {/* Services Dropdown */}
-            <li className="relative group">
-              <button className="flex items-center gap-1.5 font-medium text-gray-700 py-1 transition-colors duration-300 group-hover:text-primary">
-                Products &amp; Services
-                <ChevronDown className="w-4 h-4 transition-transform duration-300 group-hover:rotate-180 group-hover:text-primary" />
-              </button>
+         {/* Products & Services Dropdown */}
+<li className="relative group">
+  <button
+    className="
+      relative flex items-center gap-1.5 py-1 font-medium text-gray-700
+      transition-colors duration-300 group-hover:text-primary
 
-              <ul
-                className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[22rem] rounded-2xl bg-white shadow-2xl ring-1 ring-black/5 py-2 z-50
-             opacity-0 invisible translate-y-2 scale-95 origin-top
-             transition-all duration-200 ease-out
-             group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:scale-100 group-hover:-translate-x-1/2"
-              >
-                {serviceLinks.map((item) => (
-                  <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      className="group/item flex items-center justify-between px-5 py-3 text-sm font-medium text-gray-700
-                                 transition-colors duration-200 hover:bg-primary/5 hover:text-primary
-                                 border-l-2 border-transparent hover:border-primary"
-                    >
-                      <span>{item.label}</span>
-                      <ChevronRight className="w-4 h-4 text-gray-300 transition-all duration-200 -translate-x-1 opacity-0 group-hover/item:translate-x-0 group-hover/item:opacity-100 group-hover/item:text-primary" />
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </li>
+      after:absolute
+      after:left-0
+      after:-bottom-1
+      after:h-[2px]
+      after:w-0
+      after:bg-primary
+      after:transition-all
+      after:duration-300
+      group-hover:after:w-full
+    "
+  >
+    <span>Products &amp; Services</span>
+
+    <ChevronDown
+      className="
+        w-4 h-4
+        transition-all duration-300
+        group-hover:rotate-180
+        group-hover:text-primary
+      "
+    />
+  </button>
+
+  <ul
+    className="
+      absolute top-full left-1/2 -translate-x-1/2 mt-2
+      w-[22rem]
+      rounded-2xl
+      bg-white
+      shadow-2xl
+      ring-1 ring-black/5
+      py-2
+      z-50
+
+      opacity-0
+      invisible
+      translate-y-2
+      scale-95
+      origin-top
+
+      transition-all
+      duration-200
+      ease-out
+
+      group-hover:opacity-100
+      group-hover:visible
+      group-hover:translate-y-0
+      group-hover:scale-100
+      group-hover:-translate-x-1/2
+    "
+  >
+    {serviceLinks.map((item) => (
+      <li key={item.href}>
+        <Link
+          href={item.href}
+          className="
+            group/item
+            flex
+            items-center
+            justify-between
+            px-5
+            py-3
+            text-sm
+            font-medium
+            text-gray-700
+
+            transition-all
+            duration-200
+
+            hover:bg-primary/5
+            hover:text-primary
+
+            border-l-2
+            border-transparent
+            hover:border-primary
+          "
+        >
+          <span>{item.label}</span>
+
+          <ChevronRight
+            className="
+              w-4
+              h-4
+              text-gray-300
+
+              -translate-x-1
+              opacity-0
+
+              transition-all
+              duration-200
+
+              group-hover/item:translate-x-0
+              group-hover/item:opacity-100
+              group-hover/item:text-primary
+            "
+          />
+        </Link>
+      </li>
+    ))}
+  </ul>
+</li>
 
             {/* <li>
               <Link
