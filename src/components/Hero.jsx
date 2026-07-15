@@ -45,7 +45,7 @@ const Hero = () => {
 
     return (
         <section className="relative min-h-[75vh] sm:min-h-[80vh] lg:min-h-[90vh] w-full flex items-center justify-center overflow-hidden bg-secondary">
-            {/* Animated crossfade + Ken Burns background */}
+            {/* Animated crossfadddde + Ken Burns background */}
             <div className="absolute inset-0 z-0 overflow-hidden">
                 <AnimatePresence mode="sync">
                     <motion.div
