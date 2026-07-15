@@ -66,7 +66,7 @@ export default function HappyCustomersQuotes() {
     };
 
     return (
-        <section className="py-20 bg-gray-50/50 border-t border-b border-gray-100 overflow-hidden w-full">
+        <section className="py-20 bg-white border-t border-b border-gray-100 overflow-hidden w-full">
             <div className="max-w-7xl mx-auto px-6">
                 
                 {/* 1. SECTION MAIN HEADING (मोशन के साथ) */}

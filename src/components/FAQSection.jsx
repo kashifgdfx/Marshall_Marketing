@@ -61,7 +61,7 @@ export default function FAQSection() {
   };
 
   return (
-    <section className="py-24 bg-gray-50/60 border-t border-b border-gray-100">
+    <section className="py-24 bg-white border-t border-b border-gray-100">
       <div className="max-w-4xl mx-auto px-6">
         
         {/* 1. HEADING SECTION */}

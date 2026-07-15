@@ -196,7 +196,7 @@ export default function AboutWrapper() {
             </section>
 
             {/* LEADER IN X-RAY SCREENER TRAINING (HIGHLIGHT SECTION) */}
-            <section className="w-full bg-background text-foreground py-20 px-6 border-b border-border">
+            <section className="w-full bg-white text-foreground py-20 px-6 border-b border-border">
                 <div className="max-w-6xl mx-auto">
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                         <Reveal className="lg:col-span-7">
@@ -242,7 +242,7 @@ export default function AboutWrapper() {
             </section>
 
             {/* OUR CORE EXPERTISE */}
-            <section className="w-full bg-card text-foreground py-20">
+            <section className="w-full bg-white text-foreground py-20">
                 {/* HEADING */}
                 <Reveal className="text-center mb-16 px-6">
                     <span className="text-xs font-bold uppercase tracking-widest text-primary block mb-2">
