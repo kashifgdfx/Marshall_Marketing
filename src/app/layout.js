@@ -69,7 +69,10 @@ export default function RootLayout({ children }) {
         </Script>
       </head>
       <body>
-       <CustomCursor/>
+        <div className='hidden md:block'>
+ <CustomCursor/>
+        </div>
+      
         <Navbar />
         <main id="main-content">
           {children}

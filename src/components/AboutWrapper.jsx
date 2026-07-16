@@ -253,7 +253,7 @@ export default function AboutWrapper() {
                                     </div>
                                     <div>
                                         <h3 className="font-bold text-lg mb-2">Threat-Level Customization</h3>
-                                        <p className="text-sm text-muted leading-relaxed">
+                                        <p className="text-sm text-white leading-relaxed">
                                             Once we have thoroughly assessed the specific threats facing your
                                             establishment, our core focus shifts to developing an agile,
                                             bulletproof set of solutions that fit seamlessly within your existing
@@ -274,7 +274,7 @@ export default function AboutWrapper() {
                     <span className="text-xs font-bold uppercase tracking-widest text-primary block mb-2">
                         What We Excel At
                     </span>
-                    <h2 className="text-3xl sm:text-4xl font-bold">Our Areas of Expertise</h2>
+                    <h2 className="text-3xl text-white sm:text-4xl font-bold">Our Areas of Expertise</h2>
                     <div className="flex items-center justify-center gap-1.5 mt-4">
                         <span
                             className="h-[2px] bg-primary inline-block"
