@@ -252,8 +252,8 @@ export default function AboutWrapper() {
                                         <FiTarget className="w-6 h-6" />
                                     </div>
                                     <div>
-                                        <h3 className="font-bold text-lg mb-2">Threat-Level Customization</h3>
-                                        <p className="text-sm text-white leading-relaxed">
+                                        <h3 className="font-bold text-white text-lg mb-2">Threat-Level Customization</h3>
+                                        <p className="text-sm text-muted leading-relaxed">
                                             Once we have thoroughly assessed the specific threats facing your
                                             establishment, our core focus shifts to developing an agile,
                                             bulletproof set of solutions that fit seamlessly within your existing
