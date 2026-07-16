@@ -3,8 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 import { FiShield, FiCheckCircle, FiTarget, FiAward, FiArrowRight } from "react-icons/fi";
+import { KineticTextDemo } from "./KineticTextDemo";
 
 /* ---------------------------------------------------------
    Scroll-reveal utility — fades + rises content into place
@@ -81,6 +83,7 @@ const expertiseItems = [
 ];
 
 export default function AboutWrapper() {
+    const points = Array.from({ length: 25 });
     return (
         <>
             <style jsx global>{`
@@ -144,56 +147,79 @@ export default function AboutWrapper() {
             `}</style>
 
             {/* HERO & ABOUT SECTION */}
-            <section className="w-full relative overflow-hidden bg-gradient-to-br from-secondary via-secondary-light to-secondary py-20 sm:py-28 px-6 text-white border-b border-border/10">
-                {/* Drifting decorative gradients — slow, ambient, non-distracting */}
-                <div
-                    className="absolute top-0 right-0 w-[400px] h-[400px] bg-primary/10 rounded-full blur-[120px] pointer-events-none"
-                    style={{ animation: "driftSlow 16s ease-in-out infinite" }}
-                ></div>
-                <div
-                    className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-accent/5 rounded-full blur-[100px] pointer-events-none"
-                    style={{ animation: "driftSlowReverse 20s ease-in-out infinite" }}
-                ></div>
+<section className="relative w-full py-24 px-6 bg-[#0B1221] overflow-hidden">
+      {/* ब्लिंकिंग पॉइंट्स बैकग्राउंड */}
+      <div className="absolute inset-0 pointer-events-none">
+        {points.map((_, i) => (
+          <div
+            key={i}
+            className="absolute bg-blue-500/30 rounded-full animate-pulse"
+            style={{
+              width: Math.random() * 20 + 1 + "px",
+              height: Math.random() * 20 + 1 + "px",
+              top: Math.random() * 100 + "%",
+              left: Math.random() * 100 + "%",
+              animationDuration: Math.random() * 3 + 2 + "s",
+              animationDelay: Math.random() * 5 + "s",
+            }}
+          />
+        ))}
+      </div>
 
-                <div className="relative max-w-5xl mx-auto text-center flex flex-col items-center">
-                    {/* ISO Badge */}
-                    <span
-                        className="text-xs font-bold uppercase tracking-widest text-primary bg-primary-light/10 px-4 py-1.5 rounded-full inline-block mb-6 border border-primary/20 backdrop-blur-sm animate-fade-in"
-                        style={{ animation: "fadeIn 0.8s ease-out both, pulseSoft 3.5s ease-in-out 0.8s infinite" }}
-                    >
-                        Estd. 2003 | ISO 9001-2015 Certified Company
-                    </span>
+      <div className="max-w-6xl mx-auto relative z-10">
+        {/* ISO Badge */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex justify-center mb-8"
+        >
+          <span className="px-4 py-1.5 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-400 text-xs font-bold tracking-[0.2em] uppercase backdrop-blur-sm">
+            Estd. 2003 | ISO 9001-2015 Certified
+          </span>
+        </motion.div>
 
-                    {/* Main Heading */}
-                    <h1
-                        className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-8 leading-[1.15] tracking-tight max-w-4xl text-white animate-fade-in"
-                        style={{ animationDelay: "120ms" }}
-                    >
-                        About Our Company
-                    </h1>
+        {/* Main Heading with KineticText */}
+        <div className="text-center mb-16">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="text-5xl md:text-7xl font-black text-white tracking-tight leading-tight"
+          >
+            {/* यहाँ आपका काइनेटिक टेक्स्ट है */}
+            <div className="inline-block">
+              <KineticTextDemo />
+            </div>
+            <br />
+            <span className="text-blue-500">With Precision.</span>
+          </motion.div>
+        </div>
 
-                    {/* Highlighted Core Intro */}
-                    <p
-                        className="text-lg sm:text-xl lg:text-2xl leading-relaxed mb-8 font-medium text-slate-100 max-w-4xl border-b border-slate-700/50 pb-8 animate-fade-in"
-                        style={{ animationDelay: "220ms" }}
-                    >
-                        M/s Marshal Marketing & Management Pvt. Ltd. is a premier Security Company dedicated to
-                        providing top-tier security management expertise and support services to enterprises
-                        nationwide having access to general public.
-                    </p>
+        {/* Bento-style Info Boxes */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-md hover:bg-white/10 transition-colors"
+          >
+            <h3 className="text-blue-400 font-bold mb-4 uppercase text-sm tracking-widest">Our Mission</h3>
+            <p className="text-slate-300 leading-relaxed text-lg">
+              M/s Marshal Marketing & Management Pvt. Ltd. is a premier Security Company dedicated to providing top-tier security management expertise and support services to enterprises nationwide.
+            </p>
+          </motion.div>
 
-                    {/* Detailed Description */}
-                    <p
-                        className="text-base sm:text-lg leading-relaxed text-slate-300 max-w-3xl font-light animate-fade-in"
-                        style={{ animationDelay: "320ms" }}
-                    >
-                        In order to meet the desired goals of a safer environment, we provide comprehensive
-                        security analysis & assessment, security programme development, and bespoke architectural
-                        design. As a certified MSME Company, we are leading providers of advanced security
-                        systems with a core emphasis on the detection of threat objects.
-                    </p>
-                </div>
-            </section>
+          <motion.div 
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="p-8 rounded-3xl bg-blue-600/20 border border-blue-500/50 backdrop-blur-md"
+          >
+            <h3 className="text-blue-300 font-bold mb-4 uppercase text-sm tracking-widest">Core Specialization</h3>
+            <p className="text-slate-200 leading-relaxed text-lg">
+              We provide comprehensive security analysis, assessment, and bespoke architectural design. As a certified MSME, we lead in advanced threat detection systems.
+            </p>
+          </motion.div>
+        </div>
+      </div>
+    </section>
 
             {/* LEADER IN X-RAY SCREENER TRAINING (HIGHLIGHT SECTION) */}
             <section className="w-full bg-background text-foreground py-20 px-6 border-b border-border">

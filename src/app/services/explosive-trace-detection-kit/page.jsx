@@ -7,202 +7,49 @@ export const metadata = {
   description: "Official instructions and technical specifications for the SprayView™ PLUS Explosive Detection Kit (Catalog No: SV-03PLUS).",
 };
 
-export default function ExplosiveTraceDetectionKit() {
-  return (
-    <div className="bg-[#f8fafc] min-h-screen font-sans text-[#1e293b] antialiased selection:bg-blue-600/10 selection:text-[#113264]">
+const reagents = [
+  <><strong>Solution A</strong> – Detects TNT, DNT, MNT or other Aromatic Explosives</>,
+  <><strong>Solution B</strong> – Detects RDX, HMX, PETN, TATP, NG, Celluloid nitrate or other Aliphatic Explosives. <em>(Solution A required first)</em></>,
+  <><strong>Solution C</strong> – Detects Inorganic Nitrate Compounds such as Potassium Nitrate, Sodium Nitrate. <em>(Solution B required first)</em></>,
+  <><strong>Solution 1</strong> – Detects Inorganic Bromate/Chlorate Explosives including Sodium Chlorate, Potassium Bromate.</>,
+  <><strong>Solution 2</strong> – Detection of Peroxide and other strong oxidizers</>,
+  <><strong>Solution U1 and U2</strong> – Detection of Urea</>,
+  <><strong>Solution P</strong> – Detection of Perchlorate Explosives including Sodium, Potassium and Ammonium Perchlorate.</>,
+];
 
-      {/* --- HERO BANNER SECTION --- */}
-      <section className="relative bg-[#0b1329] text-white py-16 md:py-24 px-6 md:px-12 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(30,58,138,0.3),transparent_50%)]" />
-        <div className="relative max-w-7xl mx-auto space-y-4">
-          <span className="inline-block bg-blue-500/10 border border-blue-500/30 text-blue-400 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest">
-            Security & Detection Suite
-          </span>
-          <h1 className="text-3xl sm:text-4xl lg:text-6xl font-black uppercase tracking-tight text-white">
-            EXPLOSIVE TRACE DETECTION KIT
-          </h1>
-          <div className="h-1 w-20 bg-blue-500 rounded-full" />
-        </div>
+const steps = [
+  { name: "Step 1 - TNT, DNT, MNT", color: "Dark Red/Brownish/Purple", colorClass: "border-rose-200 bg-rose-50 text-rose-800", instruction: "Screw on Spray Cap A. Spray up to 3 times. Wait 30 seconds. If negative, do not wipe, proceed to Step 2." },
+  { name: "Step 2 - RDX, HMX, PETN, TATP", color: "Pink / Red Development", colorClass: "border-pink-200 bg-pink-50 text-pink-800", instruction: "Spray Reagent B directly onto the same pad. Wait 30 seconds. If negative, proceed to Step 3." },
+  { name: "Step 3 - Nitrates & Inorganic Salts", color: "Red / Pink Finalization", colorClass: "border-orange-200 bg-orange-50 text-orange-800", instruction: "Spray Reagent C onto the same pad. Wait 20 seconds to read the final indicator results." },
+];
+
+function Arrow() { return <span aria-hidden="true" className="text-base">→</span>; }
+
+export default function ExplosiveTraceDetectionKit() {
+  return <div className="min-h-screen overflow-hidden bg-[#f4f8fb] font-sans text-slate-700 antialiased selection:bg-cyan-200 selection:text-[#06204e]">
+    <style>{`
+      @keyframes lab-dash { to { stroke-dashoffset:-60; } }
+      @keyframes lab-pulse { 0%,100% { box-shadow:0 0 0 0 rgba(103,232,249,.35); } 55% { box-shadow:0 0 0 12px rgba(103,232,249,0); } }
+      @keyframes lab-float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-9px); } }
+      .lab-dash { stroke-dasharray:7 8; animation:lab-dash 3s linear infinite; } .lab-pulse { animation:lab-pulse 2.4s ease-out infinite; } .lab-float { animation:lab-float 5s ease-in-out infinite; }
+      @media (prefers-reduced-motion:reduce) { .lab-dash,.lab-pulse,.lab-float { animation:none; } }
+    `}</style>
+
+    <section className="relative isolate overflow-hidden bg-[#06204e] px-6 py-16 text-white md:px-12 md:py-24">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_83%_12%,rgba(34,211,238,.19),transparent_26%),radial-gradient(circle_at_10%_100%,rgba(37,99,235,.27),transparent_34%)]" />
+      <svg aria-hidden="true" className="absolute inset-0 h-full w-full opacity-40" viewBox="0 0 1440 500" fill="none"><path className="lab-dash" d="M-10 352H289L380 261H693L772 333H1053L1132 254H1450" stroke="#67e8f9" strokeWidth="1.2" /><circle cx="380" cy="261" r="7" fill="#67e8f9" /><circle cx="772" cy="333" r="7" fill="#67e8f9" /><circle cx="1132" cy="254" r="7" fill="#67e8f9" /></svg>
+      <div className="relative mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1.15fr_.85fr] lg:items-end"><div><div className="lab-pulse mb-7 inline-flex items-center gap-2 rounded-full border border-cyan-100/20 bg-white/10 px-4 py-2 text-[10px] font-black uppercase tracking-[.18em] text-cyan-100"><span className="h-1.5 w-1.5 rounded-full bg-cyan-300" /> Security & Detection Suite</div><h1 className="max-w-4xl text-4xl font-black uppercase leading-[.93] tracking-[-.055em] sm:text-5xl lg:text-6xl">Explosive Trace<br /><span className="text-cyan-300">Detection Kit</span></h1><div className="mt-7 h-px w-32 bg-gradient-to-r from-cyan-300 to-transparent" /></div><div className="rounded-[1.4rem] border border-white/15 bg-white/[.06] p-6 backdrop-blur-sm"><p className="text-[10px] font-black uppercase tracking-[.18em] text-cyan-300">Laboratory protocol</p><p className="mt-3 text-sm leading-6 text-blue-100/80">SprayView™ PLUS is a compact field kit engineered for clear, sequential detection procedures.</p><Link href="/contact" className="mt-5 inline-flex items-center gap-3 text-xs font-black uppercase tracking-wider text-cyan-200 transition hover:text-white">Request product information <Arrow /></Link></div></div>
+    </section>
+
+    <main className="mx-auto max-w-7xl space-y-16 px-6 py-16 md:px-12 md:py-24">
+      <section className="grid gap-8 lg:grid-cols-[.88fr_1.12fr]">
+        <aside className="space-y-5 lg:sticky lg:top-24 lg:self-start"><div className="lab-float rounded-[1.75rem] border border-slate-200 bg-white p-4 shadow-[0_14px_40px_rgba(15,52,103,.07)]"><p className="mb-3 text-[10px] font-black uppercase tracking-[.18em] text-[#1676c6]">Technical Manual Image Reference</p><div className="relative aspect-[3/2] overflow-hidden rounded-2xl bg-[#f1f7fb]"><Image src="/explosive-img.png" alt="SprayView PLUS Explosive Trace Detection Kit Instructions Diagram" fill priority className="object-contain p-3" /></div><p className="mt-3 text-center text-[10px] italic text-slate-400">Figure 1: SV-03PLUS Complete Operational Chart</p></div><div className="rounded-[1.75rem] border border-slate-200 bg-white p-4 shadow-sm"><p className="mb-3 text-[10px] font-black uppercase tracking-[.18em] text-[#1676c6]">Product Kit Component View</p><div className="relative aspect-[3/2] overflow-hidden rounded-2xl bg-[#f1f7fb]"><Image src="/explosive-img2.png" alt="SprayView PLUS Kit Reagents and Accessories" fill className="object-contain p-3" /></div><p className="mt-3 text-center text-[10px] italic text-slate-400">Figure 2: SV-03PLUS Reagents and Accessories Layout</p></div></aside>
+        <div className="rounded-[1.75rem] border border-slate-200 bg-white p-7 shadow-sm md:p-10"><div className="border-b border-slate-100 pb-6"><p className="text-[10px] font-black uppercase tracking-[.2em] text-[#1676c6]">SV-03PLUS / Operational Reference</p><h2 className="mt-3 text-2xl font-black leading-tight text-[#06204e] md:text-3xl">Instructions for Using the SprayView™ PLUS Explosive Detection Kit</h2><span className="mt-4 inline-block rounded-full bg-[#e8f6ff] px-3 py-1.5 text-[10px] font-bold tracking-wider text-[#0b3777]">Catalog Number: SV-03PLUS</span></div><div className="mt-7"><h3 className="text-lg font-black text-[#06204e]">Kit Overview and Contents</h3><p className="mt-3 text-sm leading-7 text-slate-600">The SV-03PLUS Detection Kit includes all of the items needed for the detection of explosives, explosive residues and explosive precursors. The Kit is designed to allow testing for traces of explosives in suspicious materials and detecting explosives on surfaces.</p></div><div className="mt-8 rounded-2xl bg-[#f1f7fb] p-5 md:p-6"><h3 className="text-[10px] font-black uppercase tracking-[.18em] text-[#0b3777]">Reagents & Solutions Index</h3><ul className="mt-5 grid gap-3 sm:grid-cols-2">{reagents.map((reagent, index) => <li key={index} className="flex gap-3 rounded-xl border border-white bg-white/80 p-3 text-xs leading-5 text-slate-600"><span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#0b3777] text-[10px] font-bold text-cyan-300">{String(index + 1).padStart(2, "0")}</span><span>{reagent}</span></li>)}</ul></div><div className="mt-5 grid gap-4 sm:grid-cols-2"><div className="rounded-xl border border-slate-200 p-4 text-xs text-slate-600"><strong className="mb-1 block text-[#06204e]">Validation Block:</strong>5x Validation Pads included.</div><div className="rounded-xl border border-slate-200 p-4 text-xs text-slate-600"><strong className="mb-1 block text-[#06204e]">Accessories Pack:</strong>5x Gloves, 3x Spray Caps, 5x Dropper Caps, 50x Pads.</div></div></div>
       </section>
 
-      {/* --- MAIN CORE INTERFACE CONTENT --- */}
-      <main className="max-w-7xl mx-auto px-6 py-16 ">
-        
-        {/* --- DUAL SPLIT INTERACTIVE BLOCK (IMAGE + CONTENT) --- */}
-<section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start bg-white border border-slate-200 rounded-[2.5rem] p-6 md:p-10 shadow-sm">
-  
-  {/* Left Side: Both Image Boxes (Stacked Vertically with Sticky behavior) */}
-  <div className="lg:col-span-5 flex flex-col gap-5 w-full lg:sticky lg:top-24">
-    
-    {/* First Image Box */}
-    <div className="bg-slate-50 border border-slate-200 p-4 rounded-2xl shadow-inner group overflow-hidden">
-      <span className="text-[10px] font-black text-blue-600 tracking-widest uppercase block mb-2">
-         Technical Manual Image Reference
-      </span>
-      <div className="relative w-full aspect-[3/2] overflow-hidden rounded-xl bg-white border border-slate-100 flex items-center justify-center">
-        <Image
-          src="/explosive-img.png"
-          alt="SprayView PLUS Explosive Trace Detection Kit Instructions Diagram"
-          fill
-          priority
-          className="object-contain p-2 group-hover:scale-[1.02] transition-transform duration-500"
-        />
-      </div>
-      <p className="text-[11px] text-slate-400 text-center mt-2 italic">
-        Figure 1: SV-03PLUS Complete Operational Chart
-      </p>
-    </div>
+      <section className="rounded-[1.75rem] border border-slate-200 bg-white p-7 shadow-sm md:p-10"><div className="flex flex-col gap-4 border-b border-slate-100 pb-6 md:flex-row md:items-end md:justify-between"><div><p className="text-[10px] font-black uppercase tracking-[.2em] text-[#1676c6]">Sequential sample protocol</p><h2 className="mt-3 text-2xl font-black text-[#06204e]">Detection of Commercial & Military Explosives</h2></div><span className="w-fit rounded-full border border-cyan-200 bg-cyan-50 px-3 py-1.5 text-[9px] font-black uppercase tracking-[.14em] text-[#0b3777]">Single sample flow</span></div><p className="mt-6 text-sm leading-7 text-slate-600">The SV-03PLUS SprayView™ PLUS Explosive Detection Kit allows for the detection of Commercial and Military Explosives such as TNT, RDX, PETN and Inorganic Nitrates.</p><div className="mt-6 rounded-2xl border border-cyan-100 bg-[#e8f6ff] p-5 text-sm leading-6 text-slate-700"><strong className="text-[#06204e]">Sample Collection Rule:</strong> Swab the surface with the Collection Pad. For rough/porous surfaces, moisten the pad with clean water first. <strong>To test for all Military/Commercial Explosives, only a single sample is needed</strong> by applying Reagents A, B, and C sequentially on top of each other.</div><div className="mt-7 grid gap-4 lg:grid-cols-3">{steps.map((step, index) => <article key={step.name} className="relative overflow-hidden rounded-2xl border border-slate-200 p-5"><span className="absolute right-4 top-3 text-5xl font-black leading-none text-slate-100">0{index + 1}</span><h3 className="relative max-w-[75%] text-sm font-black text-[#06204e]">{step.name}</h3><div className={`relative mt-5 rounded-lg border px-3 py-2 text-center text-xs font-bold ${step.colorClass}`}>{step.color}</div><div className="relative mt-2 rounded-lg bg-slate-50 px-3 py-2 text-center text-xs text-slate-500">No color shift</div><p className="relative mt-5 border-t border-slate-100 pt-4 text-xs leading-5 text-slate-600">{step.instruction}</p></article>)}</div></section>
 
-    {/* Second Image Box */}
-    <div className="bg-slate-50 border border-slate-200 p-4 rounded-2xl shadow-inner group overflow-hidden">
-      <span className="text-[10px] font-black text-blue-600 tracking-widest uppercase block mb-2">
-         Product Kit Component View
-      </span>
-      <div className="relative w-full aspect-[3/2] overflow-hidden rounded-xl bg-white border border-slate-100 flex items-center justify-center">
-        <Image
-          src="/explosive-img2.png" 
-          alt="SprayView PLUS Kit Reagents and Accessories"
-          fill
-          className="object-contain p-2 group-hover:scale-[1.02] transition-transform duration-500"
-        />
-      </div>
-      <p className="text-[11px] text-slate-400 text-center mt-2 italic">
-        Figure 2: SV-03PLUS Reagents and Accessories Layout
-      </p>
-    </div>
-
-  </div>
-
-  {/* Right Side: Kit Overview & Core Reagents Data (Aligned tightly from top) */}
-  <div className="lg:col-span-7 flex flex-col justify-start space-y-6 w-full">
-    
-    <div className="space-y-3 border-b border-slate-100 pb-4">
-      <h2 className="text-xl md:text-2xl font-black text-[#113264] leading-tight">
-        Instructions for Using the SprayView™ PLUS Explosive Detection Kit
-      </h2>
-      <p className="text-xs font-bold text-slate-500 tracking-wider bg-slate-100 px-3 py-1.5 rounded w-fit">
-        Catalog Number: SV-03PLUS
-      </p>
-    </div>
-
-    <div className="space-y-3">
-      <h3 className="text-lg font-bold text-[#113264] border-l-4 border-blue-600 pl-3">
-        Kit Overview and Contents
-      </h3>
-      <p className="text-slate-600 text-xs md:text-sm leading-relaxed text-justify">
-        The SV-03PLUS Detection Kit includes all of the items needed for the detection of explosives, explosive residues and explosive precursors. The Kit is designed to allow testing for traces of explosives in suspicious materials and detecting explosives on surfaces.
-      </p>
-    </div>
-      
-    <div className="space-y-3 bg-slate-50 p-5 rounded-xl border border-slate-150">
-      <h4 className="text-xs font-black text-[#113264] uppercase tracking-wider">Reagents & Solutions Index:</h4>
-      <ul className="space-y-2 text-xs text-slate-600 list-none">
-        <li className="flex items-start gap-2"><span className="text-blue-600 font-bold">▪</span> <span><strong>Solution A</strong> – Detects TNT, DNT, MNT or other Aromatic Explosives</span></li>
-        <li className="flex items-start gap-2"><span className="text-blue-600 font-bold">▪</span> <span><strong>Solution B</strong> – Detects RDX, HMX, PETN, TATP, NG, Celluloid nitrate or other Aliphatic Explosives. <em>(Solution A required first)</em></span></li>
-        <li className="flex items-start gap-2"><span className="text-blue-600 font-bold">▪</span> <span><strong>Solution C</strong> – Detects Inorganic Nitrate Compounds such as Potassium Nitrate, Sodium Nitrate. <em>(Solution B required first)</em></span></li>
-        <li className="flex items-start gap-2"><span className="text-blue-600 font-bold">▪</span> <span><strong>Solution 1</strong> – Detects Inorganic Bromate/Chlorate Explosives including Sodium Chlorate, Potassium Bromate.</span></li>
-        <li className="flex items-start gap-2"><span className="text-blue-600 font-bold">▪</span> <span><strong>Solution 2</strong> – Detection of Peroxide and other strong oxidizers</span></li>
-        <li className="flex items-start gap-2"><span className="text-blue-600 font-bold">▪</span> <span><strong>Solution U1 and U2</strong> – Detection of Urea</span></li>
-        <li className="flex items-start gap-2"><span className="text-blue-600 font-bold">▪</span> <span><strong>Solution P</strong> – Detection of Perchlorate Explosives including Sodium, Potassium and Ammonium Perchlorate.</span></li>
-      </ul>
-    </div>
-
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <div className="p-3 bg-slate-50 border border-slate-150 rounded-lg text-xs">
-        <span className="font-bold text-[#113264] block mb-1">Validation Block:</span>
-        5x Validation Pads included.
-      </div>
-      <div className="p-3 bg-slate-50 border border-slate-150 rounded-lg text-xs">
-        <span className="font-bold text-[#113264] block mb-1">Accessories Pack:</span>
-        5x Gloves, 3x Spray Caps, 5x Dropper Caps, 50x Pads.
-      </div>
-    </div>
-
-  </div>
-
-</section>
-
-        {/* --- SECTION 2: DETECTION OF COMMERCIAL & MILITARY EXPLOSIVES --- */}
-        <section className="bg-white border border-slate-200 rounded-[2rem] p-6 md:p-10 shadow-sm space-y-6">
-          <h3 className="text-lg font-bold text-[#113264] border-l-4 border-blue-600 pl-3">
-            Detection of Commercial & Military Explosives
-          </h3>
-          <p className="text-slate-600 text-xs md:text-sm leading-relaxed">
-            The SV-03PLUS SprayView™ PLUS Explosive Detection Kit allows for the detection of Commercial and Military Explosives such as TNT, RDX, PETN and Inorganic Nitrates.
-          </p>
-
-          <div className="bg-blue-50/40 border border-blue-100 p-4 rounded-xl text-xs md:text-sm text-slate-700">
-            <strong>Sample Collection Rule:</strong> Swab the surface with the Collection Pad. For rough/porous surfaces, moisten the pad with clean water first. <strong>To test for all Military/Commercial Explosives, only a single sample is needed</strong> by applying Reagents A, B, and C sequentially on top of each other.
-          </div>
-
-          {/* Commercial Grid */}
-          <div className="border border-slate-200 rounded-xl overflow-hidden text-xs">
-            <div className="grid grid-cols-1 md:grid-cols-4 bg-slate-100 p-3 font-bold text-[#113264] border-b border-slate-200">
-              <div>Protocol Target</div>
-              <div className="text-center">Positive Target Color</div>
-              <div className="text-center">Negative Output</div>
-              <div className="pl-4">Procedural Flow</div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-4 p-4 border-b border-slate-100 items-center bg-white gap-3">
-              <div className="font-bold text-[#113264]">Step 1 - TNT, DNT, MNT</div>
-              <div className="text-center font-semibold text-red-700 bg-red-50 py-1.5 rounded border border-red-100">Dark Red/Brownish/Purple</div>
-              <div className="text-center text-slate-500 bg-slate-50 py-1.5 rounded">No color shift</div>
-              <div className="text-slate-600 pl-4">Screw on Spray Cap A. Spray up to 3 times. Wait 30 seconds. If negative, do not wipe, proceed to Step 2.</div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-4 p-4 border-b border-slate-100 items-center bg-white gap-3">
-              <div className="font-bold text-[#113264]">Step 2 - RDX, HMX, PETN, TATP</div>
-              <div className="text-center font-semibold text-pink-700 bg-pink-50 py-1.5 rounded border border-pink-100">Pink / Red Development</div>
-              <div className="text-center text-slate-500 bg-slate-50 py-1.5 rounded">No color shift</div>
-              <div className="text-slate-600 pl-4">Spray Reagent B directly onto the same pad. Wait 30 seconds. If negative, proceed to Step 3.</div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-4 p-4 items-center bg-white gap-3">
-              <div className="font-bold text-[#113264]">Step 3 - Nitrates & Inorganic Salts</div>
-              <div className="text-center font-semibold text-orange-700 bg-orange-50 py-1.5 rounded border border-orange-100">Red / Pink Finalization</div>
-              <div className="text-center text-slate-500 bg-slate-50 py-1.5 rounded">No color shift</div>
-              <div className="text-slate-600 pl-4">Spray Reagent C onto the same pad. Wait 20 seconds to read the final indicator results.</div>
-            </div>
-          </div>
-        </section>
-
-        {/* --- SECTION 3: HOMEMADE PRECURSORS PROTOCOL --- */}
-        <section className="bg-gradient-to-br from-[#113264] to-[#0d254c] text-white rounded-[2.5rem] p-8 md:p-12 shadow-xl">
-          <div className="space-y-6">
-            <h3 className="text-lg font-bold text-blue-400 border-l-4 border-blue-400 pl-3">
-              Detection of Precursors Used to make Homemade Explosives (HMEs)
-            </h3>
-            <p className="text-slate-300 text-xs md:text-sm leading-relaxed">
-              <strong>Three distinct samples are required</strong> to completely isolate and detect improvised chemical precursors without matrix cross-contamination:
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
-              <div className="bg-white/[0.03] border border-white/10 p-5 rounded-xl space-y-3">
-                <span className="text-[10px] font-black text-blue-300 uppercase block">Sample Block 1</span>
-                <h4 className="font-bold text-white text-sm">Chlorates, Bromates & Peroxides</h4>
-                <p className="text-slate-300 text-xs">Add 3 drops of Reagent 1 (Positive: Orange/Red). Then add 3 drops of Reagent 2 on the same pad (Positive: Yellow/Dark Green/Blue-Green).</p>
-              </div>
-
-              <div className="bg-white/[0.03] border border-white/10 p-5 rounded-xl space-y-3">
-                <span className="text-[10px] font-black text-blue-300 uppercase block">Sample Block 2</span>
-                <h4 className="font-bold text-white text-sm">Urea Precursors (U1 & U2)</h4>
-                <p className="text-slate-300 text-xs">Place 3 drops of U1 on a new pad, followed by 3 drops of U2. Wait exactly 2 minutes to observe the Orange or Teal positive identification.</p>
-              </div>
-
-              <div className="bg-white/[0.03] border border-white/10 p-5 rounded-xl space-y-3">
-                <span className="text-[10px] font-black text-blue-300 uppercase block">Sample Block 3</span>
-                <h4 className="font-bold text-white text-sm">Inorganic Perchlorates (Reagent P)</h4>
-                <p className="text-slate-300 text-xs">Apply 3 drops of Reagent P to a new sample pad. Wait 10 seconds. Color shift from Blue to Purple validates active threats.</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-      </main>
-
-   
-
-    </div>
-  );
+      <section className="relative overflow-hidden rounded-[1.75rem] bg-[#0b3777] p-8 text-white shadow-xl md:p-12"><div className="absolute -bottom-24 -right-16 h-72 w-72 rounded-full bg-cyan-300/10 blur-3xl" /><div className="relative"><p className="text-[10px] font-black uppercase tracking-[.2em] text-cyan-300">Three-sample method</p><h2 className="mt-3 max-w-4xl text-2xl font-black leading-tight md:text-3xl">Detection of Precursors Used to make Homemade Explosives (HMEs)</h2><p className="mt-5 max-w-4xl text-sm leading-7 text-blue-100/80"><strong>Three distinct samples are required</strong> to completely isolate and detect improvised chemical precursors without matrix cross-contamination:</p><div className="mt-8 grid gap-4 md:grid-cols-3"><article className="rounded-2xl border border-white/10 bg-white/[.06] p-5"><span className="text-[10px] font-black uppercase tracking-[.18em] text-cyan-300">Sample Block 1</span><h3 className="mt-3 text-sm font-bold">Chlorates, Bromates & Peroxides</h3><p className="mt-3 text-xs leading-6 text-blue-100/80">Add 3 drops of Reagent 1 (Positive: Orange/Red). Then add 3 drops of Reagent 2 on the same pad (Positive: Yellow/Dark Green/Blue-Green).</p></article><article className="rounded-2xl border border-white/10 bg-white/[.06] p-5"><span className="text-[10px] font-black uppercase tracking-[.18em] text-cyan-300">Sample Block 2</span><h3 className="mt-3 text-sm font-bold">Urea Precursors (U1 & U2)</h3><p className="mt-3 text-xs leading-6 text-blue-100/80">Place 3 drops of U1 on a new pad, followed by 3 drops of U2. Wait exactly 2 minutes to observe the Orange or Teal positive identification.</p></article><article className="rounded-2xl border border-white/10 bg-white/[.06] p-5"><span className="text-[10px] font-black uppercase tracking-[.18em] text-cyan-300">Sample Block 3</span><h3 className="mt-3 text-sm font-bold">Inorganic Perchlorates (Reagent P)</h3><p className="mt-3 text-xs leading-6 text-blue-100/80">Apply 3 drops of Reagent P to a new sample pad. Wait 10 seconds. Color shift from Blue to Purple validates active threats.</p></article></div></div></section>
+    </main>
+  </div>;
 }

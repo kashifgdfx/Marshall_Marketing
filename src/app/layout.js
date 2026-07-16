@@ -5,6 +5,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 
 import WhatsAppButton from "@/components/WhatsAppButton ";
 import Script from "next/script";
+import CustomCursor from "@/components/CustomCursor";
 
 
 export const metadata = {
@@ -68,7 +69,7 @@ export default function RootLayout({ children }) {
         </Script>
       </head>
       <body>
-       
+       <CustomCursor/>
         <Navbar />
         <main id="main-content">
           {children}

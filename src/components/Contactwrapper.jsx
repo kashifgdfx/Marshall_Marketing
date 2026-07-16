@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
 import emailjs from "@emailjs/browser";
+import confetti from "canvas-confetti";
 
 // Icons
 import {
@@ -114,6 +115,19 @@ export default function ContactPage() {
   const compliancePct = useCountUp(100, statsInView);
 
   const dismissTimer = useRef(null);
+
+  const handleConfetti = (e) => {
+  const rect = e.currentTarget.getBoundingClientRect();
+
+  confetti({
+    particleCount: 120,
+    spread: 70,
+    origin: {
+      x: (rect.left + rect.width / 2) / window.innerWidth,
+      y: (rect.top + rect.height / 2) / window.innerHeight,
+    },
+  });
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -573,6 +587,7 @@ export default function ContactPage() {
                     {/* Submit Action Button */}
                     <button
                       type="submit"
+                      onClick={handleConfetti}
                       disabled={isLoading}
                       className="relative overflow-hidden btn-shine w-full bg-[#3b82f6] hover:bg-[#1d4ed8] text-white font-black text-sm uppercase tracking-wider py-4 rounded-xl shadow-lg shadow-[#3b82f6]/20 hover:shadow-xl active:scale-[0.99] transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
                     >

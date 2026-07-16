@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { ConfettiButton } from "../components/ui/confetti";
+import confetti from "canvas-confetti";
 
 const services = [
   {
@@ -44,6 +46,37 @@ const services = [
 export default function Services() {
   const [isMobile, setIsMobile] = useState(false);
 
+  const handleConfetti = (e) => {
+  const rect = e.currentTarget.getBoundingClientRect();
+
+  confetti({
+    particleCount: 120,
+    spread: 70,
+    origin: {
+      x: (rect.left + rect.width / 2) / window.innerWidth,
+      y: (rect.top + rect.height / 2) / window.innerHeight,
+    },
+  });
+};
+
+
+  useEffect(() => {
+    const checkDevice = () => setIsMobile(window.innerWidth < 768);
+    checkDevice();
+    window.addEventListener("resize", checkDevice);
+    return () => window.removeEventListener("resize", checkDevice);
+  }, []);
+
+  // 3D Card Animation Variants
+  const cardVariants = {
+    hidden: { opacity: 0, rotateX: 20, y: 50 },
+    visible: { 
+      opacity: 1, 
+      rotateX: 0, 
+      y: 0,
+      transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
+    }
+  };
   // मोबाइल स्क्रीन चेक करने के लिए ताकि भारी एनीमेशन बाईपास हो सके
   useEffect(() => {
     const checkDevice = () => {
@@ -76,20 +109,7 @@ export default function Services() {
   };
 
   // 3. इंडिविजुअल कार्ड्स वेरिएंट्स
-  const cardVariants = {
-    hidden: { 
-      opacity: 0, 
-      y: isMobile ? 20 : 40 // मोबाइल पर कम मूवमेंट ताकि जर्क न लगे
-    },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: {
-        duration: isMobile ? 0.4 : 0.6, // मोबाइल पर फ़ास्ट फेड
-        ease: [0.215, 0.610, 0.355, 1], // स्मूथ क्यूबिक बेज़ियर
-      }
-    },
-  };
+
 
   // 4. CTA सेक्शन एनीमेशन
   const ctaVariants = {
@@ -104,81 +124,71 @@ export default function Services() {
   return (
     <>
       {/* PRODUCTS & SERVICES SECTION */}
-      <section className="py-20 bg-white overflow-hidden">
-        {/* Section Heading के लिए मोशन */}
-        <motion.h2 
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.5 }}
-          variants={headingVariants}
-          className="text-3xl md:text-4xl font-black text-center text-[#1d4ed8] uppercase tracking-wide mb-16"
-        >
-          PRODUCTS & SERVICES
-        </motion.h2>
+   <section className="py-20 bg-[#f8fafc] overflow-hidden">
+      <motion.h2 
+        initial={{ opacity: 0, y: -20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        className="text-4xl font-black text-center text-[#113264] mb-16 uppercase tracking-widest"
+      >
+        Products & Services
+      </motion.h2>
 
-        {/* 4-Column Responsive Grid - Parent Motion */}
+      {/* PARENT PERSPECTIVE CONTAINER */}
+      <div className="max-w-7xl mx-auto px-4 [perspective:1500px]">
         <motion.div 
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: isMobile ? 0.05 : 0.15 }} // मोबाइल पर आते ही तुरंत ट्रिगर होगा
-          variants={containerVariants}
-          className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-4"
+          viewport={{ once: true, amount: 0.1 }}
+          variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
         >
           {services.map((item, index) => (
             <motion.div
               key={index}
               variants={cardVariants}
-              className="bg-white rounded-lg p-5 flex flex-col justify-between transition-shadow duration-300 hover:shadow-xl border border-gray-100/80 will-change-transform"
+              // 3D Hover Tilt Effect
+              whileHover={{ 
+                rotateY: 10, 
+                rotateX: 5, 
+                z: 20,
+                transition: { duration: 0.3 } 
+              }}
+              className="bg-white rounded-2xl p-6 shadow-2xl shadow-blue-900/10 border border-gray-100 flex flex-col justify-between group cursor-pointer [transform-style:preserve-3d]"
             >
-              <div>
-                {/* IMAGE CONTAINER */}
-                <div className="relative w-full h-48 border border-gray-200/80 rounded-lg overflow-hidden bg-[#fafafa] p-3 flex items-center justify-center mb-6">
-                  <div className="relative w-full h-full">
-                    <Image
-                      src={item.img}
-                      alt={item.alt}
-                      fill
-                      priority={index === 0}
-                      className="object-contain mix-blend-multiply transition-transform duration-300 hover:scale-105"
-                    />
-                  </div>
-                </div>
-
-                {/* TEXT DETAILS */}
-                <div className="text-center px-1">
-                  <h3 className="text-xl font-extrabold text-[#113264] tracking-tight uppercase mb-3 min-h-[56px] flex items-center justify-center">
-                    {item.title}
-                  </h3>
-                  
-                  <p className="text-sm font-bold text-gray-800 leading-snug mb-2 min-h-[40px]">
-                    {item.subtitle}
-                  </p>
-
-                  {item.model && (
-                    <p className="text-xs font-medium text-gray-500 mb-4 bg-gray-50 py-0.5 px-2 rounded inline-block">
-                      {item.model}
-                    </p>
-                  )}
-
-                  <p className="text-xs text-gray-500 font-medium leading-relaxed mb-6 text-center line-clamp-6">
-                    {item.desc}
-                  </p>
+              {/* IMAGE WITH 3D POP EFFECT */}
+              <div className="relative w-full h-48 mb-6 [transform:translateZ(30px)]">
+                <div className="relative w-full h-full rounded-xl overflow-hidden bg-gray-50 p-4">
+                  <Image
+                    src={item.img}
+                    alt={item.alt}
+                    fill
+                    className="object-contain transition-transform duration-500 group-hover:scale-110"
+                  />
                 </div>
               </div>
 
-              {/* ACTION LINK */}
-              <div className="text-center pt-2">
-                <Link
-                  href={item.link}
-                  className="inline-block text-xs font-bold tracking-wide text-[#3b82f6] transition-all duration-200 hover:text-[#1d4ed8] hover:underline"
-                >
-                  Read More...
+              {/* CONTENT */}
+              <div className="text-center [transform:translateZ(20px)]">
+                <h3 className="text-lg font-black text-[#113264] uppercase mb-2">
+                  {item.title}
+                </h3>
+                <p className="text-xs font-bold text-gray-500 mb-4">{item.subtitle}</p>
+                <p className="text-xs text-gray-400 line-clamp-3 mb-6">{item.desc}</p>
+              </div>
+
+              <div className="text-center">
+                <Link href={item.link} className="text-xs font-black text-blue-600 uppercase hover:underline">
+                  Read More
                 </Link>
               </div>
             </motion.div>
           ))}
         </motion.div>
-      </section>
+      </div>
+
+      {/* CTA SECTION WITH 3D DEPTH */}
+  
+    </section>
 
       {/* CALL TO ACTION (CTA) SECTION */}
       <motion.section 
@@ -188,7 +198,7 @@ export default function Services() {
         variants={ctaVariants}
         className="relative bg-gradient-to-r from-[#113264] to-[#1e40af] py-20 overflow-hidden text-white will-change-transform"
       >
-        {/* Background Geometric Accents */}
+      
         <div className="absolute left-[-100px] bottom-[-100px] w-[300px] h-[300px] bg-white/5 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute right-[-80px] top-[-80px] w-[240px] h-[240px] bg-white/5 rounded-full blur-xl pointer-events-none" />
 
@@ -201,17 +211,16 @@ export default function Services() {
           <p className="text-blue-100 text-sm md:text-base max-w-2xl mx-auto mb-10 opacity-90 font-medium">
             Get in touch with our security compliance experts today to schedule consultation programs.
           </p>
-
-          <Link
-            href="/contact"
-            className="group relative inline-flex items-center justify-center overflow-hidden rounded-full bg-[#3b82f6] px-10 py-4 text-sm font-black uppercase tracking-widest text-white shadow-xl transition-all duration-300 hover:bg-white hover:text-[#113264] hover:-translate-y-0.5"
-          >
-            <span className="relative z-10">
-              Schedule A Meeting
-            </span>
-          </Link>
+<Link
+  href="/contact"
+  onClick={handleConfetti}
+  className="group relative inline-flex items-center justify-center overflow-hidden rounded-full bg-[#3b82f6] px-10 py-4 text-sm font-black uppercase tracking-widest text-white shadow-xl transition-all duration-300 hover:bg-white hover:text-[#113264]"
+>
+  Schedule A Meeting
+</Link>
         </div>
       </motion.section>
+   
     </>
   );
 }

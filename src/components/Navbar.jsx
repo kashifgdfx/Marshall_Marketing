@@ -51,7 +51,7 @@ const Navbar = () => {
             <li>
               <Link
                 href="/"
-                className="relative font-medium text-gray-700 py-1 transition-colors duration-300 hover:text-primary
+                className="relative font-medium text-gray-900 py-1 transition-colors duration-300 hover:text-primary
                            after:content-[''] after:absolute after:left-0 after:-bottom-0.5 after:h-[2px] after:w-0 after:bg-primary
                            after:transition-all after:duration-300 hover:after:w-full"
               >

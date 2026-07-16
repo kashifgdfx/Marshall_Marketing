@@ -1,254 +1,289 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { FiArrowRight, FiCheckCircle, FiPhoneCall, FiShield } from "react-icons/fi";
-import Link from "next/link";
-import Image from "next/image";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { FiShield, FiCheckCircle } from "react-icons/fi";
+import dynamic from "next/dynamic";
 
-const bgImages = ["/hero-bg1.jpg", "/hero-bg2.jpg", "/hero-bg3.jpg"];
+import HeroBackground from "./hero/HeroBackground";
+import HeroStats from "./hero/HeroStats";
+import HeroCTA from "./hero/HeroCTA";
+
+// Lazy-load heavy visual components
+const HeroParticles    = dynamic(() => import("./hero/HeroParticles"),    { ssr: false });
+const HeroNetwork      = dynamic(() => import("./hero/HeroNetwork"),      { ssr: false });
+const HeroScene        = dynamic(() => import("./hero/HeroScene"),        { ssr: false });
+const HeroFloatingCards = dynamic(() => import("./hero/HeroFloatingCards"), { ssr: false });
+
+const bgImages = ["/slide1.jpg", "/slide2.jpg", "/slide3.jpg"];
 
 const trustPoints = [
-    "ISO 9001-2015 Certified",
-    "MSME Registered Enterprise",
-    "Advanced CBT Tech",
+  "ISO 9001-2015 Certified",
+  "MSME Registered Enterprise",
+  "Advanced CBT Tech",
 ];
 
 const container = {
-    hidden: { opacity: 0 },
-    show: {
-        opacity: 1,
-        transition: { staggerChildren: 0.12, delayChildren: 0.2 },
-    },
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { staggerChildren: 0.13, delayChildren: 0.15 } },
 };
 
 const item = {
-    hidden: { opacity: 0, y: 24, filter: "blur(6px)" },
-    show: {
-        opacity: 1,
-        y: 0,
-        filter: "blur(0px)",
-        transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
-    },
+  hidden: { opacity: 0, y: 28, filter: "blur(8px)" },
+  show: {
+    opacity: 1, y: 0, filter: "blur(0px)",
+    transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1] },
+  },
 };
 
-const Hero = () => {
-    const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    const reduce = useReducedMotion();
+// Slide indicators (kept from original)
+function SlideIndicators({ total, current, onChange }) {
+  return (
+    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-30">
+      {Array.from({ length: total }).map((_, i) => (
+        <button
+          key={i}
+          onClick={() => onChange(i)}
+          aria-label={`Go to slide ${i + 1}`}
+          className="relative h-1.5 rounded-full overflow-hidden bg-white/20 transition-all duration-500"
+          style={{ width: i === current ? 32 : 10 }}
+        >
+          {i === current && (
+            <motion.span
+              key={`fill-${i}`}
+              initial={{ width: "0%" }}
+              animate={{ width: "100%" }}
+              transition={{ duration: 5, ease: "linear" }}
+              className="absolute inset-y-0 left-0 bg-blue-500"
+            />
+          )}
+        </button>
+      ))}
+    </div>
+  );
+}
 
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setCurrentImageIndex((p) => (p === bgImages.length - 1 ? 0 : p + 1));
-        }, 3000);
-        return () => clearInterval(timer);
-    }, []);
+export default function Hero() {
+  const reduce = useReducedMotion();
+  const sectionRef = useRef(null);
+  const [mouse, setMouse] = useState({ x: 0, y: 0 });
+  const [slideIdx, setSlideIdx] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
 
-    return (
-        <section className="relative min-h-[75vh] sm:min-h-[80vh] lg:min-h-[90vh] w-full flex items-center justify-center overflow-hidden bg-secondary">
-            {/* Animated crossfadddde + Ken Burns background */}
-            <div className="absolute inset-0 z-0 overflow-hidden">
-                <AnimatePresence mode="sync">
-                    <motion.div
-                        key={bgImages[currentImageIndex]}
-                        className="absolute inset-0"
-                        initial={{ opacity: 0, scale: 1.15 }}
-                        animate={{ opacity: 0.4, scale: 1 }}
-                        exit={{ opacity: 0, scale: 1.05 }}
-                        transition={{ opacity: { duration: 1.4, ease: "easeInOut" }, scale: { duration: 6, ease: "linear" } }}
-                    >
-                        <Image
-                            src={bgImages[currentImageIndex]}
-                            alt={`Marshal Security Background ${currentImageIndex + 1}`}
-                            fill
-                            priority={currentImageIndex === 0}
-                            quality={90}
-                            className="object-cover object-center"
-                        />
-                    </motion.div>
-                </AnimatePresence>
+  // Scroll-driven effects
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end start"] });
+  const heroScale    = useTransform(scrollYProgress, [0, 1], [1, 0.96]);
+  const heroBgScale  = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
+  const heroOpacity  = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
+  const cardsOpacity = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
 
-                {/* Themed overlays */}
-                <div className="absolute inset-0 bg-gradient-to-r from-secondary/60 via-secondary/25 to-transparent" />
-                <div className="absolute inset-0 bg-gradient-to-t from-secondary/70 via-transparent to-secondary/20" />
+  // Mouse tracking (normalized -1 to 1)
+  const handleMouseMove = useCallback((e) => {
+    if (reduce || isMobile) return;
+    const rect = sectionRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    setMouse({
+      x: ((e.clientX - rect.left) / rect.width) * 2 - 1,
+      y: ((e.clientY - rect.top) / rect.height) * 2 - 1,
+    });
+  }, [reduce, isMobile]);
 
-                {/* Animated glow orb using primary */}
-                {!reduce && (
-                    <motion.div
-                        aria-hidden
-                        className="absolute -top-32 -right-32 h-[420px] w-[420px] rounded-full bg-primary/30 blur-3xl"
-                        animate={{ x: [0, 40, -20, 0], y: [0, 30, -10, 0], opacity: [0.35, 0.6, 0.35] }}
-                        transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
-                    />
-                )}
-                {!reduce && (
-                    <motion.div
-                        aria-hidden
-                        className="absolute bottom-[-120px] left-[-120px] h-[380px] w-[380px] rounded-full bg-primary/20 blur-3xl"
-                        animate={{ x: [0, -30, 20, 0], y: [0, -20, 15, 0], opacity: [0.25, 0.5, 0.25] }}
-                        transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
-                    />
-                )}
+  const handleMouseLeave = useCallback(() => setMouse({ x: 0, y: 0 }), []);
 
-                {/* Subtle scanline grid */}
-                <div
-                    aria-hidden
-                    className="absolute inset-0 opacity-[0.07] mix-blend-overlay"
-                    style={{
-                        backgroundImage:
-                            "linear-gradient(to right, rgba(255,255,255,.6) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,.6) 1px, transparent 1px)",
-                        backgroundSize: "60px 60px",
-                    }}
-                />
-            </div>
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 1024);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
-            {/* Content */}
-            <motion.div
-                variants={container}
-                initial="hidden"
-                animate="show"
-                className="relative z-10 w-full max-w-7xl mx-auto px-6 py-20 lg:py-22 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center"
+  // Slide auto-advance
+  useEffect(() => {
+    const t = setInterval(() => setSlideIdx((p) => (p + 1) % bgImages.length), 5000);
+    return () => clearInterval(t);
+  }, []);
+
+  const headingX = reduce || isMobile ? 0 : mouse.x * -8;
+  const headingY = reduce || isMobile ? 0 : mouse.y * -5;
+
+  return (
+    <section
+      ref={sectionRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="relative min-h-[100svh] w-full flex items-center justify-center overflow-hidden"
+      aria-label="Marshal Marketing & Management — Hero"
+    >
+      {/* ── Layered Background ── */}
+      <motion.div className="absolute inset-0" style={{ scale: heroBgScale }}>
+        <HeroBackground mouseX={mouse.x} mouseY={mouse.y} />
+      </motion.div>
+
+      {/* ── Particles (full section) ── */}
+      {!isMobile && (
+        <div className="absolute inset-0 z-[1]">
+          <HeroParticles mouseX={mouse.x} mouseY={mouse.y} />
+        </div>
+      )}
+
+      {/* ── Network (full section) ── */}
+      {!isMobile && (
+        <div className="absolute inset-0 z-[2]">
+          <HeroNetwork />
+        </div>
+      )}
+
+      {/* ── Main content wrapper ── */}
+      <motion.div
+        style={{ scale: heroScale, opacity: heroOpacity }}
+        className="relative z-10 w-full max-w-7xl mx-auto px-5 sm:px-8 py-24 lg:py-28 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center"
+      >
+        {/* ════ LEFT — Content ════ */}
+        <motion.div
+          variants={container}
+          initial="hidden"
+          animate="show"
+          className="flex flex-col gap-6 text-left"
+        >
+          {/* Badge */}
+          <motion.div
+            variants={item}
+            className="inline-flex w-fit items-center gap-2 rounded-full px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-white"
+            style={{
+              background: "rgba(47,111,228,0.12)",
+              border: "1px solid rgba(47,111,228,0.4)",
+              backdropFilter: "blur(10px)",
+              boxShadow: "0 0 16px rgba(47,111,228,0.2)",
+            }}
+          >
+            <motion.span
+              animate={reduce ? {} : { scale: [1, 1.35, 1], opacity: [1, 0.55, 1] }}
+              transition={{ duration: 2.2, repeat: Infinity }}
+              className="flex"
             >
-                <div className="lg:col-span-9 space-y-7 text-left">
-                    {/* Badge */}
-                    <motion.div variants={item} className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 backdrop-blur-md px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-white shadow-inner">
-                        <motion.span
-                            animate={reduce ? {} : { scale: [1, 1.3, 1], opacity: [1, 0.6, 1] }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                            className="flex"
-                        >
-                            <FiShield className="text-primary" />
-                        </motion.span>
-                        <span className="text-slate-200">Your Security, Our Priority</span>
-                        <span className="ml-1 h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-                    </motion.div>
+              <FiShield className="text-blue-400" />
+            </motion.span>
+            <span className="text-slate-200">Your Security, Our Priority</span>
+            <span className="h-1.5 w-1.5 rounded-full bg-blue-400 animate-pulse" />
+          </motion.div>
 
-                    {/* Headline */}
-                    <motion.h1
-                        variants={item}
-                        className="text-4xl sm:text-5xl lg:text-7xl font-black text-white leading-[1.05] tracking-tight"
-                    >
-                        Securing Infrastructure <br />
-                        <span className="relative inline-block">
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary-light to-primary bg-[length:200%_auto] animate-[shine_6s_linear_infinite]">
-                                Advancing Threat Detection
-                            </span>
-                            <motion.span
-                                aria-hidden
-                                initial={{ scaleX: 0 }}
-                                animate={{ scaleX: 1 }}
-                                transition={{ delay: 1, duration: 1, ease: "easeOut" }}
-                                className="absolute -bottom-2 left-0 h-1 w-full origin-left bg-gradient-to-r from-primary to-transparent rounded-full"
-                            />
-                        </span>
-                    </motion.h1>
+          {/* Headline */}
+          <motion.h1
+            variants={item}
+            style={{ x: headingX, y: headingY }}
+            transition={{ type: "spring", stiffness: 60, damping: 18 }}
+            className="text-4xl sm:text-5xl lg:text-[3.6rem] xl:text-[4rem] font-black text-white leading-[1.04] tracking-tight"
+          >
+            Securing Infrastructure
+            <br />
+            <span className="relative inline-block mt-1">
+              <span
+                className="text-transparent bg-clip-text"
+                style={{
+                  backgroundImage: "linear-gradient(90deg, #2F6FE4 0%, #7AA7FF 40%, #4D8BFF 70%, #2F6FE4 100%)",
+                  backgroundSize: "200% auto",
+                  animation: "heroShine 5s linear infinite",
+                }}
+              >
+                Advancing Threat Detection
+              </span>
+              <motion.span
+                aria-hidden
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ delay: 1.1, duration: 1.1, ease: "easeOut" }}
+                className="absolute -bottom-2 left-0 h-[3px] w-full origin-left rounded-full"
+                style={{ background: "linear-gradient(90deg, #2F6FE4, #4D8BFF, transparent)" }}
+              />
+            </span>
+          </motion.h1>
 
-                    {/* Description */}
-                    <motion.p variants={item} className="max-w-2xl text-base sm:text-lg leading-relaxed text-slate-300 font-medium">
-                        M/s Marshal Marketing & Management Pvt. Ltd. is India&apos;s undisputed market leader in Computer-Based X-Ray Screener Training, offering elite security management & analysis across national sectors.
-                    </motion.p>
+          {/* Description */}
+          <motion.p
+            variants={item}
+            className="max-w-xl text-base sm:text-lg leading-relaxed text-slate-300 font-medium"
+          >
+            M/s Marshal Marketing &amp; Management Pvt. Ltd. is India&apos;s undisputed market leader in
+            Computer-Based X-Ray Screener Training, offering elite security management &amp; analysis
+            across national sectors.
+          </motion.p>
 
-                    {/* Trust points */}
-                    <motion.div variants={item} className="flex flex-wrap gap-3 pt-2">
-                        {trustPoints.map((point, i) => (
-                            <motion.div
-                                key={point}
-                                initial={{ opacity: 0, y: 12 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.8 + i * 0.15, duration: 0.5 }}
-                                whileHover={{ y: -3, borderColor: "rgb(var(--primary) / 0.6)" }}
-                                className="group flex items-center gap-2 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 px-4 py-2.5 text-xs sm:text-sm font-semibold text-slate-200 shadow-sm transition-colors duration-300 hover:border-primary/50"
-                            >
-                                <FiCheckCircle className="text-primary text-base group-hover:scale-110 transition-transform" />
-                                <span>{point}</span>
-                            </motion.div>
-                        ))}
-                    </motion.div>
+          {/* Trust chips */}
+          <motion.div variants={item} className="flex flex-wrap gap-2.5">
+            {trustPoints.map((point, i) => (
+              <motion.div
+                key={point}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.9 + i * 0.14, duration: 0.5 }}
+                whileHover={{ y: -2 }}
+                className="group flex items-center gap-2 rounded-lg px-3.5 py-2 text-xs sm:text-sm font-semibold text-slate-200 transition-all duration-300"
+                style={{
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  backdropFilter: "blur(6px)",
+                }}
+              >
+                <FiCheckCircle className="text-blue-400 text-sm group-hover:scale-110 transition-transform" />
+                {point}
+              </motion.div>
+            ))}
+          </motion.div>
 
-                    {/* CTAs */}
-                    <motion.div variants={item} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-4">
-                        <motion.a
-                            whileHover={{ y: -3, scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                            href="tel:+911123456789"
-                            className="group relative inline-flex items-center justify-center gap-3 rounded-full bg-primary px-8 py-4 text-sm font-bold uppercase tracking-[0.12em] text-white shadow-lg shadow-primary/40 overflow-hidden"
-                        >
-                            <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent group-hover:translate-x-full transition-transform duration-700" />
-                            <motion.span
-                                animate={reduce ? {} : { rotate: [0, -15, 15, -10, 10, 0] }}
-                                transition={{ duration: 1.4, repeat: Infinity, repeatDelay: 3 }}
-                                className="flex"
-                            >
-                                <FiPhoneCall className="text-lg" />
-                            </motion.span>
-                            Connect With Experts
-                        </motion.a>
+          {/* CTAs */}
+          <motion.div variants={item}>
+            <HeroCTA />
+          </motion.div>
 
-                        <motion.div
-                            whileHover={{ y: -3, scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                            className="w-full sm:w-auto"
-                        >
-                            <Link
-                                href="/products-services"
-                                className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm px-8 py-4 text-sm font-bold uppercase tracking-[0.12em] text-white transition-colors duration-300 hover:bg-white/20 hover:border-white"
-                            >
-                                Our Services
+          {/* Stats */}
+          <motion.div variants={item}>
+            <HeroStats />
+          </motion.div>
+        </motion.div>
 
-                                <motion.span
-                                    animate={{ x: [0, 6, 0] }}
-                                    transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-                                    className="flex"
-                                >
-                                    <FiArrowRight className="text-lg" />
-                                </motion.span>
-                            </Link>
-                        </motion.div>
-                    </motion.div>
-                </div>
-            </motion.div>
+        {/* ════ RIGHT — 3D Scene ════ */}
+        <motion.div
+          initial={{ opacity: 0, x: 40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.4, duration: 1, ease: [0.22, 1, 0.36, 1] }}
+          style={{ opacity: cardsOpacity }}
+          className="relative hidden lg:flex items-center justify-center"
+        >
+          <div className="relative w-full aspect-square max-w-[520px]">
+            {/* Scene glow backdrop */}
+            <div
+              className="absolute inset-[10%] rounded-full"
+              style={{
+                background: "radial-gradient(circle, rgba(47,111,228,0.12) 0%, transparent 70%)",
+                filter: "blur(30px)",
+              }}
+            />
+            <HeroScene mouseX={mouse.x} mouseY={mouse.y} />
+            <HeroFloatingCards mouseX={mouse.x} mouseY={mouse.y} />
+          </div>
+        </motion.div>
+      </motion.div>
 
-            {/* Slide indicators */}
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-20">
-                {bgImages.map((_, index) => (
-                    <button
-                        key={index}
-                        onClick={() => setCurrentImageIndex(index)}
-                        aria-label={`Go to slide ${index + 1}`}
-                        className="relative h-1.5 rounded-full overflow-hidden bg-white/30 transition-all duration-500"
-                        style={{ width: index === currentImageIndex ? 32 : 10 }}
-                    >
-                        {index === currentImageIndex && (
-                            <motion.span
-                                key={`fill-${currentImageIndex}`}
-                                initial={{ width: "0%" }}
-                                animate={{ width: "100%" }}
-                                transition={{ duration: 5, ease: "linear" }}
-                                className="absolute inset-y-0 left-0 bg-primary"
-                            />
-                        )}
-                    </button>
-                ))}
-            </div>
+      {/* ── Slide indicators ── */}
+      <SlideIndicators total={bgImages.length} current={slideIdx} onChange={setSlideIdx} />
 
-            {/* Scroll cue */}
-            {!reduce && (
-                <motion.div
-                    className="absolute bottom-14 right-6 hidden md:flex flex-col items-center gap-2 text-white/60 text-[10px] uppercase tracking-[0.3em] z-20"
-                    animate={{ y: [0, 6, 0] }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                >
-                    <span>Scroll</span>
-                    <span className="h-8 w-px bg-gradient-to-b from-primary to-transparent" />
-                </motion.div>
-            )}
+      {/* ── Scroll cue ── */}
+      {!reduce && (
+        <motion.div
+          className="absolute bottom-14 right-6 hidden md:flex flex-col items-center gap-2 text-white/50 text-[10px] uppercase tracking-[0.3em] z-30"
+          animate={{ y: [0, 7, 0] }}
+          transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <span>Scroll</span>
+          <span className="h-8 w-px" style={{ background: "linear-gradient(to bottom, #2F6FE4, transparent)" }} />
+        </motion.div>
+      )}
 
-            <style jsx>{`
-        @keyframes shine {
+      <style>{`
+        @keyframes heroShine {
           to { background-position: 200% center; }
         }
       `}</style>
-        </section>
-    );
-};
-
-export default Hero;
+    </section>
+  );
+}
